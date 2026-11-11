@@ -1,0 +1,62 @@
+{
+  "6911": {
+    "rate": 18,
+    "description": "Tableware, kitchenware, and household articles of porcelain or china"
+  },
+  "6912": {
+    "rate": 18,
+    "description": "Ceramic tableware, kitchenware, and other household articles (other than porcelain/china)"
+  },
+  "69120040": {
+    "rate": 0,
+    "description": "Clay and Terracotta articles"
+  },
+  "6913": {
+    "rate": 18,
+    "description": "Statuettes and other ornamental ceramic articles (Standard)"
+  },
+  "691390": {
+    "rate": 12,
+    "description": "Statuettes and ornamental ceramic articles of earthen clay or terracotta"
+  },
+  "6914": {
+    "rate": 18,
+    "description": "Other ceramic articles (Pots, jars, etc.)"
+  },
+  "691490": {
+    "rate": 12,
+    "description": "Earthen pots and clay articles not elsewhere specified"
+  },
+  "7013": {
+    "rate": 18,
+    "description": "Glassware for table, kitchen, indoor decoration or similar purposes"
+  },
+  "9405": {
+    "rate": 18,
+    "description": "Lamps and lighting fittings, searchlights, and spotlights"
+  },
+  "4420": {
+    "rate": 12,
+    "description": "Wood marquetry; caskets and cases; statuettes and other ornaments of wood"
+  },
+  "8306": {
+    "rate": 18,
+    "description": "Statuettes and other ornaments, of base metal"
+  },
+  "6802": {
+    "rate": 18,
+    "description": "Worked monumental or building stone (Stone decor/sculptures)"
+  },
+  "6809": {
+    "rate": 18,
+    "description": "Articles of plaster or of compositions based on plaster"
+  },
+  "9703": {
+    "rate": 12,
+    "description": "Original sculptures and statuary, in any material"
+  },
+  "DEFAULT": {
+    "rate": 18,
+    "description": "Fallback rate for unmatched HSN codes"
+  }
+}
