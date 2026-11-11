@@ -1,5 +1,5 @@
 // src/components/home/NewArrivals.jsx
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -39,6 +39,11 @@ const NewArrivals = () => {
   const headingRef = useRef(null);
   const sliderWrapperRef = useRef(null);
   const [swiperInstance, setSwiperInstance] = useState(null);
+
+  const sortedArrivals = useMemo(
+    () => [...newArrivals].sort((a, b) => (a.finalPrice ?? 0) - (b.finalPrice ?? 0)),
+    [newArrivals]
+  );
 
   useEffect(() => {
     dispatch(fetchNewArrivals());
@@ -108,7 +113,7 @@ const NewArrivals = () => {
         <Swiper
           modules={[Autoplay]} 
           onSwiper={setSwiperInstance}
-          loop={!isLoading && newArrivals.length > 4} 
+          loop={!isLoading && sortedArrivals.length > 4} 
           observer={true} 
           observeParents={true}
           speed={800} 
@@ -121,7 +126,7 @@ const NewArrivals = () => {
           className="w-full pb-6" 
         >
           {/* CONDITION 1: IS LOADING -> Render Skeletons */}
-          {isLoading && newArrivals.length === 0 ? (
+          {isLoading && sortedArrivals.length === 0 ? (
             skeletonArray.map((_, index) => (
               <SwiperSlide key={`skeleton-${index}`}>
                 <ProductSkeleton />
@@ -129,7 +134,7 @@ const NewArrivals = () => {
             ))
           ) : (
             /* CONDITION 2: DATA LOADED -> Render Real Cards */
-            newArrivals.map((product) => (
+            sortedArrivals.map((product) => (
               <SwiperSlide key={product._id || product.id}>
                 {/* --- FIX 2: Pass currencySymbol down to ProductCard --- */}
                 <ProductCard 

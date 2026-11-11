@@ -2,12 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom"; 
 import { Icon } from "@iconify/react";
 
-// UPDATED: Added "None" as the first option
 const sortOptions = [
-  "None",
-  "Newest", 
-  "Price: Low to High", 
-  "Price: High to Low"
+  "Price: Low to High",
+  "Newest",
+  "Price: High to Low",
+  "None"
 ];
 
 const FilterBar = ({ 
@@ -85,12 +84,7 @@ const FilterBar = ({
   };
 
   const handleSortChange = (option) => {
-    // UPDATED: Check for "None" to keep URL clean
-    if (option === "None") {
-      searchParams.delete("sort"); 
-    } else {
-      searchParams.set("sort", option);
-    }
+    searchParams.set("sort", option);
     searchParams.delete("page");
     setSearchParams(searchParams);
     setOpenDropdown(null);

@@ -19,22 +19,20 @@ const Shop = () => {
   // Read URL parameters. If empty, default to empty string (which means "All" for our backend)
   const activeCategoriesStr = searchParams.get("category") || "";
   const activeMaterialsStr = searchParams.get("material") || "";
-  // UPDATED: Default sort is now "None"
-  const activeSort = searchParams.get("sort") || "None";
+  const activeSort = searchParams.get("sort") || "Price: Low to High";
   const currentPage = parseInt(searchParams.get("page")) || 1;
 
   // Convert comma-separated strings to arrays so FilterBar can easily check what is selected
   const activeCategories = activeCategoriesStr ? activeCategoriesStr.split(',') : [];
   const activeMaterials = activeMaterialsStr ? activeMaterialsStr.split(',') : [];
 
-  // UPDATED: Added "None" which triggers the Category Grouping in the backend
   const getApiSortValue = (uiSort) => {
     switch (uiSort) {
       case "Price: Low to High": return "price_asc";
       case "Price: High to Low": return "price_desc";
       case "Newest": return "newest";
       case "None": return "none";
-      default: return "none";
+      default: return "price_asc";
     }
   };
 

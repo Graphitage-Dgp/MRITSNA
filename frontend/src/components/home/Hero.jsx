@@ -51,13 +51,6 @@ const Hero = () => {
     { scope: heroSectionRef }
   );
 
-  const featuredPiece = {
-    tag: "Exclusive of this month",
-    name: "The Patina Gourd Vase",
-    image: "/hero_prod.webp",
-    link: "/shop",
-  };
-
   return (
     <section
       ref={heroSectionRef}
@@ -124,7 +117,7 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* ================= BOTTOM ROW: White CTA Card (Left) + Untinted Frosted Card (Right) ================= */}
+        {/* ================= BOTTOM ROW: White CTA Card ================= */}
         <div className="w-full flex flex-col lg:flex-row items-stretch lg:items-end justify-between gap-3.5 sm:gap-5 lg:gap-8 z-20">
           
           {/* Bottom-Left: White Card with Subcopy + Animated Explore CTA + Trust Bar */}
@@ -167,34 +160,6 @@ const Hero = () => {
               </span>
             </div>
           </div>
-
-          {/* Bottom-Right: Horizontal Frosted Glass Card (No Black Tint, With "Exclusive of this month" Heading) */}
-          <Link
-            to={featuredPiece.link}
-            className={`group w-full lg:w-auto bg-white/35 backdrop-blur-xl border border-white/60 p-2.5 sm:p-3 xl:p-3.5 shadow-[0_16px_40px_rgba(28,26,23,0.1)] flex flex-row items-center gap-3.5 sm:gap-4 xl:gap-5 transition-all duration-500 hover:bg-white/50 ${
-              revealed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-            }`}
-          >
-            {/* Image Container: Product image takes 100% of container */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 xl:w-24 xl:h-24 shrink-0 overflow-hidden">
-              <img
-                src={featuredPiece.image}
-                alt={featuredPiece.name}
-                loading="eager"
-                className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-
-            {/* Right Info Stack: "Exclusive of this month" Heading + Product Name */}
-            <div className="flex flex-col justify-center pr-2 sm:pr-4 xl:pr-5">
-              <span className="text-[10px] sm:text-[11px] xl:text-xs tracking-[0.18em] uppercase font-semibold text-[#1a1a1a]/75 mb-1">
-                {featuredPiece.tag}
-              </span>
-              <h2 className="head-font text-base sm:text-lg xl:text-xl 2xl:text-2xl text-[#1a1a1a] leading-snug font-normal">
-                {featuredPiece.name}
-              </h2>
-            </div>
-          </Link>
 
         </div>
       </div>
