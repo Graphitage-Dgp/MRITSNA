@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { userAxios } from '../../configs/axiosInstance'; 
 
-export const fetchNewArrivals = createAsyncThunk(
-  'product/fetchNewArrivals',
+export const fetchHomepagePicks = createAsyncThunk(
+  'product/fetchHomepagePicks',
   async (_, thunkAPI) => {
     try {
-      const response = await userAxios.get('/products/new-arrivals');
-      return response.data; 
+      const response = await userAxios.get('/products/homepage-picks');
+      return response.data;
     } catch (error) {
-      const message = error.response?.data?.message || error.message || 'Failed to fetch new arrivals';
+      const message = error.response?.data?.message || error.message || 'Failed to fetch homepage picks';
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -57,7 +57,7 @@ export const fetchFilterOptions = createAsyncThunk(
 );
 
 const initialState = {
-  newArrivals: [],
+  homepagePicks: [],
   products: [],
   singleProduct: null,
   
@@ -101,19 +101,19 @@ const productSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // --- Fetch New Arrivals ---
-      .addCase(fetchNewArrivals.pending, (state) => {
+      // --- Fetch Homepage Picks ---
+      .addCase(fetchHomepagePicks.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.message = '';
       })
-      .addCase(fetchNewArrivals.fulfilled, (state, action) => {
+      .addCase(fetchHomepagePicks.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.newArrivals = action.payload.data; 
+        state.homepagePicks = action.payload.data;
         state.currencySymbol = action.payload.currencySymbol || '₹';
         state.currencyCode = action.payload.currencyCode || 'INR';
       })
-      .addCase(fetchNewArrivals.rejected, (state, action) => {
+      .addCase(fetchHomepagePicks.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

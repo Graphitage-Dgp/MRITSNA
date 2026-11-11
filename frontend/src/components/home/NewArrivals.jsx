@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Icon } from "@iconify/react";
 
-import { fetchNewArrivals } from "../../store/features/productSlice";
+import { fetchHomepagePicks } from "../../store/features/productSlice";
 import ProductCard from "../../utils/lazy_loading/ProductCard"; // Adjust path
 import ProductSkeleton from "../../utils/lazy_loading/ProductSkeleton"; // Adjust path
 
@@ -33,20 +33,22 @@ const NewArrivals = () => {
   const dispatch = useDispatch();
   
   // --- FIX 1: Extract currencySymbol from the Redux store ---
-  const { newArrivals, isLoading, currencySymbol } = useSelector((state) => state.product);
+  const { homepagePicks, isLoading, currencySymbol } = useSelector((state) => state.product);
 
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const sliderWrapperRef = useRef(null);
   const [swiperInstance, setSwiperInstance] = useState(null);
 
-  const sortedArrivals = useMemo(
-    () => [...newArrivals].sort((a, b) => (a.finalPrice ?? 0) - (b.finalPrice ?? 0)),
-    [newArrivals]
+  const sortedPicks = useMemo(
+    () => [...homepagePicks].sort((a, b) => (a.finalPrice ?? 0) - (b.finalPrice ?? 0)),
+    [homepagePicks]
   );
 
+  const startingPrice = sortedPicks[0]?.finalPrice;
+
   useEffect(() => {
-    dispatch(fetchNewArrivals());
+    dispatch(fetchHomepagePicks());
   }, [dispatch]);
 
   // Heading Animation Hook
@@ -72,7 +74,7 @@ const NewArrivals = () => {
 
   // Data Reveal Animation Hook - Only fires when data actually loads!
   useGSAP(() => {
-    if (!isLoading && newArrivals.length > 0) {
+    if (!isLoading && homepagePicks.length > 0) {
       ScrollTrigger.refresh(); // Recalculate heights
       
       gsap.to(".gsap-reveal-card", {
@@ -87,7 +89,7 @@ const NewArrivals = () => {
         }
       });
     }
-  }, [isLoading, newArrivals]); 
+  }, [isLoading, homepagePicks]); 
 
   // Create an array of 5 Skeletons for the initial load state
   const skeletonArray = Array(5).fill(0);
@@ -101,11 +103,16 @@ const NewArrivals = () => {
       <div className="w-full px-6 lg:px-10 mb-14 lg:mb-20 pointer-events-none">
         <div ref={headingRef} className="relative inline-block mt-10 lg:mt-0">
           <span className="absolute left-1 lg:top-4 lg:left-2 text-xs lg:text-base font-bold tracking-[0.2em] uppercase">
-            <SplitText>New</SplitText>
+            <SplitText>Shop</SplitText>
           </span>
           <h2 className="head-font text-6xl md:text-8xl lg:text-[8rem] leading-none tracking-tighter">
-            <SplitText>arrivals</SplitText>
+            <SplitText>essentials</SplitText>
           </h2>
+          {startingPrice ? (
+            <p className="mt-3 lg:mt-4 text-[0.65rem] lg:text-xs tracking-[0.2em] uppercase text-[#1a1a1a]/55">
+              Lowest price from every category · from {currencySymbol} {startingPrice.toLocaleString("en-IN")}
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -113,7 +120,7 @@ const NewArrivals = () => {
         <Swiper
           modules={[Autoplay]} 
           onSwiper={setSwiperInstance}
-          loop={!isLoading && sortedArrivals.length > 4} 
+          loop={!isLoading && sortedPicks.length > 4} 
           observer={true} 
           observeParents={true}
           speed={800} 
@@ -126,7 +133,7 @@ const NewArrivals = () => {
           className="w-full pb-6" 
         >
           {/* CONDITION 1: IS LOADING -> Render Skeletons */}
-          {isLoading && sortedArrivals.length === 0 ? (
+          {isLoading && sortedPicks.length === 0 ? (
             skeletonArray.map((_, index) => (
               <SwiperSlide key={`skeleton-${index}`}>
                 <ProductSkeleton />
@@ -134,7 +141,7 @@ const NewArrivals = () => {
             ))
           ) : (
             /* CONDITION 2: DATA LOADED -> Render Real Cards */
-            sortedArrivals.map((product) => (
+            sortedPicks.map((product) => (
               <SwiperSlide key={product._id || product.id}>
                 {/* --- FIX 2: Pass currencySymbol down to ProductCard --- */}
                 <ProductCard 

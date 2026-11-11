@@ -58,6 +58,84 @@ export const getNewArrivals = async (req, res, next) => {
 };
 
 
+export const getHomepagePicks = async (req, res, next) => {
+  try {
+    const regionData = req.region || { countryCode: 'IN', currencyCode: 'INR', symbol: '₹', rate: 1 };
+
+    const products = await Product.aggregate([
+      { $match: { status: 'active', category: { $nin: [null, ''] } } },
+      { $addFields: { firstVariant: { $arrayElemAt: ["$variants", 0] } } },
+      {
+        $addFields: {
+          rawPrice: { $ifNull: ["$firstVariant.pricing.price", 0] },
+          discount: { $ifNull: ["$firstVariant.pricing.discountPercentage", 0] }
+        }
+      },
+      {
+        $addFields: {
+          sortPrice: {
+            $subtract: [
+              "$rawPrice",
+              { $multiply: ["$rawPrice", { $divide: ["$discount", 100] }] }
+            ]
+          }
+        }
+      },
+      { $match: { sortPrice: { $gt: 0 } } },
+      { $sort: { sortPrice: 1, createdAt: -1 } },
+      { $group: { _id: "$category", product: { $first: "$$ROOT" } } },
+      { $replaceRoot: { newRoot: "$product" } },
+      { $sort: { sortPrice: 1, createdAt: -1 } },
+      { $limit: 12 },
+      { $project: { title: 1, slug: 1, category: 1, isPremium: 1, 'variants._id': 1, 'variants.pricing': 1, 'variants.images': 1, 'variants.colorName': 1, 'variants.inventory': 1 } }
+    ]);
+
+    const formattedProducts = products.map((product) => {
+      const firstVariant = product.variants?.[0] || {};
+      const firstImage = firstVariant.images?.[0] || {};
+      const pricing = firstVariant.pricing || { price: 0, discountPercentage: 0 };
+
+      const localizedPricing = calculateRegionalPricing(
+        pricing.price,
+        pricing.discountPercentage,
+        product.isPremium || false,
+        regionData
+      );
+
+      return {
+        _id: product._id,
+        slug: product.slug,
+        name: product.title,
+        category: product.category,
+        isPremium: product.isPremium || false,
+        variantId: firstVariant._id || null,
+        colorName: firstVariant.colorName || null,
+        inStock: (firstVariant.inventory?.quantity || 0) > 0 || (firstVariant.inventory?.allowBackorder || false),
+        originalPrice: localizedPricing.originalPrice,
+        finalPrice: localizedPricing.sellingPrice,
+        discount: localizedPricing.discountPercentage,
+        img: firstImage.baseUrl || null,
+        altText: firstImage.altText || product.title,
+        totalReviews: product.totalReviews || 0,
+        averageRating: product.averageRating || 0,
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: formattedProducts.length,
+      data: formattedProducts,
+      currencySymbol: regionData.symbol,
+      currencyCode: regionData.currencyCode
+    });
+
+  } catch (error) {
+    console.error("Error fetching homepage picks:", error);
+    next(error);
+  }
+};
+
+
 export const getPaginatedProducts = async (req, res, next) => {
   try {
     const regionData = req.region || { countryCode: 'IN', currencyCode: 'INR', symbol: '₹', rate: 1 };

@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { setManualRegion, DEFAULT_INR_REGION } from "../../store/features/regionSlice";
 import { openCartDrawer, fetchUserCart, hydrateGuestCartAPI } from "../../store/features/cartSlice";
-import { fetchSingleProduct, fetchStoreProducts, fetchNewArrivals } from "../../store/features/productSlice";
+import { fetchSingleProduct, fetchStoreProducts, fetchHomepagePicks } from "../../store/features/productSlice";
 import { userAxios } from "../../configs/axiosInstance";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -160,7 +160,7 @@ const Navbar = () => {
       } else if (location.pathname === "/shop") {
         dispatch(fetchStoreProducts());
       } else if (location.pathname === "/") {
-        dispatch(fetchNewArrivals());
+        dispatch(fetchHomepagePicks());
       }
     } catch (error) {
       console.error("Failed to change region", error);

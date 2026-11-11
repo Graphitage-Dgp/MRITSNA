@@ -1,6 +1,7 @@
 import express from 'express';
 import { 
   getNewArrivals, 
+  getHomepagePicks,
   getPaginatedProducts,
   getSingleProduct,
   getFilterOptions,
@@ -15,6 +16,8 @@ const router = express.Router();
 router.use(trackVisit);
 
 router.get('/new-arrivals', regionMiddleware, getNewArrivals);
+
+router.get('/homepage-picks', regionMiddleware, getHomepagePicks);
 
 router.get('/search', regionMiddleware, searchProducts);
 
